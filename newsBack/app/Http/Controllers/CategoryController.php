@@ -27,12 +27,15 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $data = [
-            'category' => $request->input('category')
+            'category' => $request->input('category'),
+            'image' => $request->input('category')
         ];
-        $category  = Category::create($data);
-        if ($category) {
-            return response()->json($category);
-        }
+
+        return response()->json($data);
+        // $category  = Category::create($data);
+        // if ($category) {
+        //     return response()->json($category);
+        // }
     }
 
     /**

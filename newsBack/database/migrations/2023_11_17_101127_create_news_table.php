@@ -8,16 +8,21 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
+     *
+     * @return void
      */
-    public function up(): void
+    public function up()
     {
         Schema::create('news', function (Blueprint $table) {
             $table->increments("newsId");
             $table->unsignedInteger('categoryId');
             $table->foreign('categoryId')->references('categoryId')->on('categories');
-            $table->string('headLineImage')->nullable();
+            $table->unsignedInteger('creatorId');
+            $table->foreign('creatorId')->references('userId')->on('users');
+            $table->enum('newsStatus', ['publish', 'archive']);
             $table->string("title");
             $table->string("slug")->unique();
+            $table->string('newsImage')->nullable();
             $table->text('newsContent');
             $table->timestamps();
         });
@@ -25,8 +30,10 @@ return new class extends Migration
 
     /**
      * Reverse the migrations.
+     *
+     * @return void
      */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('news');
     }
