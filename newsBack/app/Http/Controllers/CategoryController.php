@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
+use App\Models\category;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -14,8 +14,17 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $category = Category::all();
-        return response()->json($category);
+        //
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
     }
 
     /**
@@ -26,37 +35,27 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $data = [
-            'category' => $request->input('category'),
-            'image' => $request->input('category')
-        ];
-
-        return response()->json($data);
-        // $category  = Category::create($data);
-        // if ($category) {
-        //     return response()->json($category);
-        // }
+        //
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Category  $category
+     * @param  \App\Models\category  $category
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(category $category)
     {
-        $category = Category::where('categoryId', $id)->first();
-        return response()->json($category);
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Category  $category
+     * @param  \App\Models\category  $category
      * @return \Illuminate\Http\Response
      */
-    public function edit(Category $category)
+    public function edit(category $category)
     {
         //
     }
@@ -65,41 +64,22 @@ class CategoryController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Category  $category
+     * @param  \App\Models\category  $category
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, category $category)
     {
-        $category = Category::find($id);
-        // dd($category);
-        if (!$category) {
-            return response()->json(['message' => 'Data not found'], 404);
-        }
-        $this->validate($request, [
-            "category" => "required"
-        ]);
-
-        $data = $request->all();
-        $category->fill($data);
-        $category->save();
-        return response()->json($category);
+        //
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Category  $category
+     * @param  \App\Models\category  $category
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(category $category)
     {
-        $category = Category::find($id);
-        if (!$category) {
-            return response()->json(['message' => 'Data not found'], 404);
-        }
-
-        $category->delete();
-
-        return response()->json(['message' => 'Data deleted successfully'], 200);
+        //
     }
 }
