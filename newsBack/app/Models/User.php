@@ -20,8 +20,8 @@ class User extends Authenticatable
     protected $table = "users";
     protected $primaryKey = "userId";
     protected $KeyType = "int";
-    protected $incrementing = true;
-    protected $timestamps = true;
+    public $incrementing = true;
+    public $timestamps = true;
 
     protected $fillable = [
         'roleId',

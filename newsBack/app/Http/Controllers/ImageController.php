@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\image;
+use App\Models\Image;
 use Illuminate\Http\Request;
+use Storage;
+use Validator;
 
 class ImageController extends Controller
 {
@@ -35,7 +37,24 @@ class ImageController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if (!$request->hasFile('image')) {
+            return response()->json(['image'=> null, 'message'=> 'harus menginputkan gambar'],409);
+        }
+        $rules = ["descImage"=>'required'];
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            return $validator->errors();
+        }
+        $path = $request->file('image')->store('public');
+        $urlImage = url('/')."/storage"."/".$path;
+        $data = [
+            'image' => $urlImage,
+            'descImage' => $request->input('descImage'),
+        ];
+        // $news = News::create($data);
+        $InsertImage = new Image($data);
+        $InsertImage->save();
+        return response()->json(['image' => $data, 'message'=>'gambar berhasil ditambahkan'], 201);
     }
 
     /**
