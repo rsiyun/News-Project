@@ -37,10 +37,10 @@ class ImageController extends Controller
      */
     public function store(Request $request)
     {
-        if (!$request->hasFile('image')) {
-            return response()->json(['image'=> null, 'message'=> 'harus menginputkan gambar'],409);
-        }
-        $rules = ["descImage"=>'required'];
+        // if (!$request->hasFile('image')) {
+        //     return response()->json(['image'=> null, 'message'=> 'harus menginputkan gambar'],409);
+        // }
+        $rules = ["image"=>'required|image|mimes:jpeg,png,jpg',"descImage"=>'required'];
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
             return $validator->errors();

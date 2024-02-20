@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\User\UserUpdateRequest;
 use App\Http\Requests\UserLoginRequest;
 use App\Http\Requests\UserRegisterRequest;
-use App\Http\Resources\UserResource;
 use App\Models\User;
 use Auth;
 use Carbon\Carbon;
+use Hash;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
 use Str;
@@ -68,6 +69,49 @@ class UserController extends Controller
     }
     public function getuser(){
         $user = Auth::user();
-        dd($user);
+        return response()->json(['success'=>true,'data'=>$user], 200);
+    }
+
+    public function changepassword(Request $request){
+        $rules = ["oldpassword"=>'required', "newpassword"=>"required|min:8"];
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            return $validator->errors();
+        }
+        $user = Auth::user();
+        if (!Hash::check($request->input("oldpassword"), $user["password"])) {
+            return response()->json(["status"=>false, "message"=>"Password lama salah"], 401);
+        }
+        if ($request->input("oldpassword") == $request->input("newpassword")) {
+            return response()->json(["status"=>false, "message"=>"password baru tidak boleh sama dengan password lama"], 401);
+        }
+        $user->update(["password" => bcrypt($request->input("newpassword"))]);
+        return response()->json(["success"=>true, "message"=>"Berhasil merubah password"], 200);
+    }
+    public function newpassword(Request $request){
+        $rules = ["password"=>'required|min:8'];
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            return $validator->errors();
+        }
+        $user = Auth::user();
+        $data = ["password"=>$request->input("password")];
+        $user->update($data);
+        return response()->json(["success"=>true, "message"=>"Berhasil menambahkan password"], 200);
+
+    }
+    public function updateprofile(UserUpdateRequest $req){
+        $request = $req->validated();
+        $user = Auth::user();
+        if ($req->hasFile('profilePicture')) {
+            $path = $req->file('profilePicture')->store('public');
+            $urlImage = url('/')."/storage"."/".$path;
+            $request["profilePicture"] = $urlImage;
+        }
+        $user->update($request);
+        return response()->json(["success"=>true, "message"=>"user berhasil diubah", "data"=>[
+            "username"=>$user["username"]
+        ]],200);
+
     }
 }
